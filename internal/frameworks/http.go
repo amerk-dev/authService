@@ -13,7 +13,8 @@ type Server struct {
 func NewServer() *Server {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) { w.Write([]byte("Hello World!")) })
-	mux.HandleFunc("/auth/", handlers.AuthHandler)
+	mux.HandleFunc("/auth/get-token", handlers.AuthHandler)
+	mux.HandleFunc("/auth/refresh", handlers.RefreshHandler) // refresh token
 	return &Server{mux: mux}
 
 }
