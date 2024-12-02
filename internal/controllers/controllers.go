@@ -2,8 +2,11 @@ package controllers
 
 import (
 	"authService/internal/store"
+	"authService/pkg/generator"
+	"encoding/base64"
 	"encoding/json"
 	"github.com/golang-jwt/jwt/v5"
+	"golang.org/x/crypto/bcrypt"
 	"net/http"
 	"time"
 )
@@ -27,7 +30,7 @@ func AccessMethod(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	refreshToken, hashedRefreshToken, err := "", "", nil // ToDo потом сделаю
+	refreshToken, hashedRefreshToken, err := generateRefreshToken()
 	if err != nil {
 		http.Error(w, "Failed to generate refresh token", http.StatusInternalServerError)
 		return
@@ -66,4 +69,16 @@ func generateAccessToken(guid, ip string, expiration time.Duration) (string, err
 	}
 
 	return tokenString, nil
+}
+
+func generateRefreshToken() (string, string, error) {
+	refreshToken := generator.GenerateSecureToken(32)
+	hashedToken, err := bcrypt.GenerateFromPassword([]byte(refreshToken), bcrypt.DefaultCost)
+	if err != nil {
+		return "", "", err
+	}
+
+	encodedToken := base64.StdEncoding.EncodeToString([]byte(refreshToken))
+
+	return encodedToken, string(hashedToken), nil
 }

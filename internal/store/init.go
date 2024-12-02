@@ -21,7 +21,6 @@ func DataBaseInit() {
 	dsn := fmt.Sprintf("host=%s port=%d user=%s "+
 		"password=%s dbname=%s ",
 		host, port, user, password, dbname)
-	log.Println(dsn)
 	var err error
 	Db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
