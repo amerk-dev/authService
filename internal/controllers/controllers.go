@@ -36,7 +36,7 @@ func AccessMethod(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = store.StoreRefreshToken(body.GuId, hashedRefreshToken)
+	err = store.StoreRefreshToken(body.GuId, hashedRefreshToken, r.RemoteAddr, "")
 	if err != nil {
 		http.Error(w, "Failed to store refresh token", http.StatusInternalServerError)
 		return
